@@ -7,6 +7,10 @@ const apiUrl = "http://localhost:4000";
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const [loggedInUser, setLoggedInUser] = useState({
+    username: "",
+    userId: "",
+  });
 
   useEffect(() => {
     fetch(`${apiUrl}/movie`)
@@ -22,13 +26,7 @@ function App() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(user),
-    })
-      .then((res) => res.json())
-      .then((userData) => {
-        console.log(
-          `SUCCESSFULLY REGISTRED WITH USERNAME: ${userData.data.username}`
-        );
-      });
+    });
   };
 
   const handleLogin = async ({ username, password }) => {
@@ -42,10 +40,8 @@ function App() {
     })
       .then((res) => res.json())
       .then((userData) => {
-        localStorage.setItem("token", `${userData.data}`);
-        console.log(
-          "I LOGGED IN, GOT BACK A JWT FROM API, AND IT IS NOW SAVED TO LOCAL STORAGE."
-        );
+        localStorage.setItem("token", `${userData.data.token}`);
+        setLoggedInUser({ username: username, userId: userData.data.userId });
       });
   };
 
@@ -54,6 +50,7 @@ function App() {
       title: title,
       description: description,
       runtimeMins: runtimeMins,
+      userId: loggedInUser,
     };
 
     const token = localStorage.getItem("token");
@@ -84,15 +81,19 @@ function App() {
       <MovieForm handleSubmit={handleCreateMovie} />
 
       <h1>Movie list</h1>
+      <h3>The user logged in is {loggedInUser.username}</h3>
       <ul>
         {movies.map((movie) => {
-          return (
-            <li key={movie.id}>
-              <h3>{movie.title}</h3>
-              <p>Description: {movie.description}</p>
-              <p>Runtime: {movie.runtimeMins}</p>
-            </li>
-          );
+          if (movie.userId === loggedInUser.userId) {
+            return (
+              <li key={movie.id}>
+                <h3>{movie.title}</h3>
+                <p>Description: {movie.description}</p>
+                <p>Runtime: {movie.runtimeMins}</p>
+                <p>User ID: {movie.userId}</p>
+              </li>
+            );
+          }
         })}
       </ul>
     </div>

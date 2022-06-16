@@ -11,7 +11,7 @@ const getAllMovies = async (req, res) => {
 };
 
 const createMovie = async (req, res) => {
-  const { title, description, runtimeMins } = req.body;
+  const { title, description, runtimeMins, userId } = req.body;
   const token = req.headers.authorization.split(" ")[1];
 
   try {
@@ -25,6 +25,7 @@ const createMovie = async (req, res) => {
       title: title,
       description: description,
       runtimeMins: runtimeMins,
+      userId: userId,
     },
   });
 
