@@ -14,7 +14,7 @@ const register = async (req, res) => {
         password: encryptedPassword,
       },
     });
-    res.json({ data: createdUser });
+    res.json({ data: createdUser.username });
   } catch (e) {
     return res.status(401).json({ error: "Invalid token provided." });
   }

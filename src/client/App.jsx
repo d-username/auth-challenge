@@ -50,7 +50,7 @@ function App() {
       title: title,
       description: description,
       runtimeMins: runtimeMins,
-      userId: loggedInUser,
+      userId: loggedInUser.userId,
     };
 
     const token = localStorage.getItem("token");
